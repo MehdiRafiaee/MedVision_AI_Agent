@@ -1,0 +1,43 @@
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medvision-agent
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: medvision-agent
+  template:
+    metadata:
+      labels:
+        app: medvision-agent
+    spec:
+      containers:
+      - name: medvision-agent
+        image: medvision-ai-agent:latest
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        - name: models-volume
+          mountPath: /app/models
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            memory: "8Gi"
+            cpu: "2"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: medvision-service
+spec:
+  selector:
+    app: medvision-agent
+  ports:
+  - port: 80
+    targetPort: 8000
+  type: LoadBalancer
