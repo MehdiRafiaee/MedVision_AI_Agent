@@ -1,0 +1,30 @@
+# config/model_config.yaml
+model:
+  name: "LightweightMedicalCNN"
+  input_shape: [224, 224, 3]
+  num_classes: 2
+  learning_rate: 0.001
+  batch_size: 32
+  epochs: 100
+
+training:
+  use_augmentation: true
+  validation_split: 0.2
+  early_stopping_patience: 10
+  reduce_lr_patience: 5
+
+features:
+  texture:
+    glcm_distances: [1, 2, 3]
+    glcm_angles: [0, 0.785, 1.57, 2.356]
+  shape:
+    use_hu_moments: true
+    use_contour_features: true
+  frequency:
+    wavelet: "db4"
+    wavelet_level: 3
+
+evaluation:
+  metrics: ["accuracy", "precision", "recall", "f1_score"]
+  save_visualizations: true
+  generate_reports: true
