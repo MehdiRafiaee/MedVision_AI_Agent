@@ -1,0 +1,38 @@
+# Data Paths
+paths:
+  raw_data: "data/raw/"
+  processed_data: "data/processed/"
+  augmented_data: "data/augmented/"
+  models: "output/models/"
+  predictions: "output/predictions/"
+  reports: "output/reports/"
+  visualizations: "output/visualizations/"
+
+# Data Preprocessing
+preprocessing:
+  resize: [224, 224]
+  normalization: true
+  contrast_enhancement: true
+  noise_removal: true
+  augmentation: true
+
+# Augmentation Parameters
+augmentation:
+  rotation_range: 20
+  width_shift_range: 0.2
+  height_shift_range: 0.2
+  horizontal_flip: true
+  vertical_flip: false
+  zoom_range: 0.2
+  brightness_range: [0.8, 1.2]
+
+# Dataset Information
+datasets:
+  covid_ct:
+    url: "https://www.kaggle.com/datasets/plameneduardo/sarscov2-ctscan-dataset"
+    classes: ["covid", "non_covid"]
+    image_count: 2482
+  chest_xray:
+    url: "https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia"
+    classes: ["normal", "pneumonia"]
+    image_count: 5856
