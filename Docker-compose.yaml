@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  medvision-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - MODEL_PATH=/app/models
+      - DATA_PATH=/app/data
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+      - ./models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  medvision-training:
+    build: .
+    command: ["python", "main.py", "--mode", "train", "--data_dir", "/app/data"]
+    environment:
+      - ENVIRONMENT=training
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+    profiles:
+      - training
+
+  medvision-monitoring:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    depends_on:
+      - medvision-api
+
+volumes:
+  data:
+  models:
